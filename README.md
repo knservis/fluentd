@@ -15,6 +15,23 @@ Fluentd config is created using `/app/config/fluentd.tmpl` docker-gen template a
 
 # Simple usage
 
-`docker run -d -v /var/run/docker.sock:/tmp/docker.sock -v /var/lib/docker:/var/lib/docker knservis/fluentd`
+`docker run -d -v -e AWS_REGION='us-east-1' /var/run/docker.sock:/tmp/docker.sock -v /var/lib/docker:/var/lib/docker knservis/fluentd`
 
 Logs will be sent to a a group called docker-logs and the stream name will be the docker conatiner name.
+
+# AWS Policy (log write only)
+
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "logs:*"
+          ],
+          "Resource": [
+            "arn:aws:logs:us-east-1:*:*"
+          ]
+        }
+      ]
+    }

@@ -1,7 +1,7 @@
 ## File input
 ## read docker logs with tag=docker.container
 
-{{range $key, $value := .}}{{ $logs := $value.Env.LOG }}{{ if $logs }}
+{{range $key, $value := .}}
 
 <source>
   type tail
@@ -17,21 +17,19 @@
 <match docker.container.{{printf "%.*s" 12 $value.ID}}>
     type record_modifier
     tag docker.filtered.{{printf "%.*s" 12 $value.ID}}
-    image {{ $value.Image }}
     host ${hostname}
-    name {{ $logs }}
-    env {{LOG_ENV}}
+    name {{ $value.Name }}
+    id {{printf "%.*s" 12 $value.ID}}
 </match>
 
 <match docker.filtered.{{printf "%.*s" 12 $value.ID}}>
   type cloudwatch_logs
   log_group_name docker-logs
-  log_stream_name {{ $value.Image }}
+  log_stream_name {{ printf "%s/%s/%s" $value.Image.Registry $value.Image.Repository $value.Image.Tag }}
   auto_create_stream true
   #message_keys key1,key2,key3,...
   #max_message_length 32768
   #use_tag_as_group false
 </match>
 
-{{end}}{{ end }}
-
+{{ end }}
