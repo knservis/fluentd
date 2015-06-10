@@ -1,7 +1,5 @@
 #!/bin/bash
 
-ES_HOST=${ELASTICSEARCH_PORT_9200_TCP_ADDR:-$ES_HOST}
-ES_PORT=${ELASTICSEARCH_PORT_9200_TCP_PORT:-$ES_PORT}
 
 mkdir -p /etc/fluentd
 echo '' > /etc/fluentd/fluentd.conf

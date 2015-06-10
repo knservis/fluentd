@@ -22,21 +22,16 @@
     name {{ $logs }}
     env {{LOG_ENV}}
 </match>
+
+<match docker.filtered.{{printf "%.*s" 12 $value.ID}}>
+  type cloudwatch_logs
+  log_group_name docker-logs
+  log_stream_name {{ $value.Image }}
+  auto_create_stream true
+  #message_keys key1,key2,key3,...
+  #max_message_length 32768
+  #use_tag_as_group false
+</match>
+
 {{end}}{{ end }}
 
-<match docker.filtered.**>
-  type exclude_filter
-  key stream
-  value stdout
-  regexp false # default false, string comparison
-  add_tag_prefix stderr
-</match>
-
-<match stderr.docker.filtered.**>
-    type elasticsearch
-    host {{ .Env.ES_HOST }}
-    port {{ .Env.ES_PORT }}
-    index_name fluentd
-    type_name fluentd
-    logstash_format true
-</match>
