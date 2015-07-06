@@ -20,6 +20,7 @@
     host ${hostname}
     name {{ $value.Name }}
     id {{printf "%.*s" 12 $value.ID}}
+    time ${time}
 </match>
 
 <match docker.filtered.{{printf "%.*s" 12 $value.ID}}>
